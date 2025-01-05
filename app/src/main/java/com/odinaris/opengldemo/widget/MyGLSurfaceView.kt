@@ -21,11 +21,13 @@ class MyGLSurfaceView : GLSurfaceView {
     constructor(context: Context, attrs: AttributeSet?) : this(context)
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        val x: Float = event.x
-        val y: Float = event.y
+        var x = event.x
+        var y = event.y
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                // do something
+                mRenderer.setLocation(x, y)
+                mRenderer.setLocation(x + 1f, y + 1f)
+                requestRender()
             }
 
             MotionEvent.ACTION_MOVE -> {
@@ -34,7 +36,7 @@ class MyGLSurfaceView : GLSurfaceView {
             }
 
             MotionEvent.ACTION_UP -> {
-                mRenderer.setLocation(x, y)
+                mRenderer.reset()
                 requestRender()
             }
         }

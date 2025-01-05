@@ -79,28 +79,31 @@ class PathRender(private var context: Context) : GLSurfaceView.Renderer {
     }
 
     override fun onDrawFrame(gl: GL10?) {
-        logD(TAG, "onDrawFrame: onDrawFrame")
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT)
         if (mPointVector.size < 1) return
         GLES30.glUseProgram(mProgram)
 
         GLES30.glBindVertexArray(mVAO)
 
-//        for (point in mPointVector) {
-//            calculateMesh(vec2(point.x, point.y), vec2(point.z, point.w))
-//            GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, mVboIds[0])
-//            GLES30.glBufferSubData(GLES30.GL_ARRAY_BUFFER, 0, mVertexCoords.size * 3 * 4, getVec3Buffer(mVertexCoords))
-//            GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, mVboIds[1])
-//            GLES30.glBufferSubData(GLES30.GL_ARRAY_BUFFER, 0, mTexCoords.size * 2 * 4, getVec2Buffer(mTexCoords))
-//            GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, TRIANGLE_NUM * 3)
-//        }
-
         for (i in 0 until mPointVector.size - 1) {
-            calculateMesh( vec2(mPointVector[i].x, mPointVector[i].y), vec2(mPointVector[i + 1].z, mPointVector[i + 1].w))
+            calculateMesh(
+                vec2(mPointVector[i].x, mPointVector[i].y),
+                vec2(mPointVector[i].z, mPointVector[i].w)
+            )
             GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, mVboIds[0])
-            GLES30.glBufferSubData(GLES30.GL_ARRAY_BUFFER, 0, mVertexCoords.size * 3 * 4, getVec3Buffer(mVertexCoords))
+            GLES30.glBufferSubData(
+                GLES30.GL_ARRAY_BUFFER,
+                0,
+                mVertexCoords.size * 3 * 4,
+                getVec3Buffer(mVertexCoords)
+            )
             GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, mVboIds[1])
-            GLES30.glBufferSubData(GLES30.GL_ARRAY_BUFFER, 0, mTexCoords.size * 2 * 4, getVec2Buffer(mTexCoords))
+            GLES30.glBufferSubData(
+                GLES30.GL_ARRAY_BUFFER,
+                0,
+                mTexCoords.size * 2 * 4,
+                getVec2Buffer(mTexCoords)
+            )
             GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, TRIANGLE_NUM * 3)
         }
 
@@ -210,7 +213,7 @@ class PathRender(private var context: Context) : GLSurfaceView.Renderer {
         }
 
         for (i in 0 until TRIANGLE_NUM * 3) {
-            mVertexCoords[i] = texCoordToVertexCoord(mTexCoords[i]!!);
+            mVertexCoords[i] = texCoordToVertexCoord(mTexCoords[i])
         }
     }
 
@@ -265,17 +268,21 @@ class PathRender(private var context: Context) : GLSurfaceView.Renderer {
      * y1 = k * x1 + b => k = (y1 - b) / x1
      * y2 = k * x2 + b => y2 = ((y1 - b) / x1) * x2 + b
      */
-    fun binaryEquationGetKB(x1: Float, y1: Float, x2: Float, y2: Float): vec2 {
+    private fun binaryEquationGetKB(x1: Float, y1: Float, x2: Float, y2: Float): vec2 {
         val k = (y1 - y2) / (x1 - x2)
         val b = (x1 * y2 - x2 * y1) / (x1 - x2)
         return vec2(k, b)
     }
 
-    fun texCoordToVertexCoord(texCoord: vec2) : vec3 {
+    private fun texCoordToVertexCoord(texCoord: vec2): vec3 {
         return vec3(2 * texCoord.x - 1, 1 - 2 * texCoord.y, 0f)
     }
 
     fun setLocation(x: Float, y: Float) {
+        logD(TAG, "setLocation: x:$x, y:$y mReset:$mReset")
+        if (x == -1f) {
+            mReset = true
+        }
         if (mReset) {
             if (x != -1f) {
                 mCurPoint = vec2(x / mWidth, y / mHeight)
@@ -287,6 +294,10 @@ class PathRender(private var context: Context) : GLSurfaceView.Renderer {
             if (mCurPoint == mPrePoint) return
             mPointVector.add(vec4(mPrePoint.x, mPrePoint.y, mCurPoint.x, mCurPoint.y))
         }
+    }
+
+    fun reset() {
+        mReset = true
     }
 
     companion object {
