@@ -42,6 +42,12 @@ fun createProgram(vertexSourceCode: String, fragmentSourceCode: String): Int {
     return program
 }
 
+fun createProgram(context: Context, vertexShaderResId: Int, fragmentShaderResId: Int): Int {
+    val vertexShaderSource = context.resources.openRawResource(vertexShaderResId).bufferedReader().use { it.readText() }
+    val fragmentShaderSource = context.resources.openRawResource(fragmentShaderResId).bufferedReader().use { it.readText() }
+    return createProgram(vertexShaderSource, fragmentShaderSource)
+}
+
 private fun loadShaderFromAsset(context: Context, fileName: String): String {
     val stringBuilder = StringBuilder()
     try {

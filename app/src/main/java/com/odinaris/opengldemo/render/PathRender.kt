@@ -3,6 +3,7 @@ package com.odinaris.opengldemo.render
 import android.content.Context
 import android.opengl.GLES30
 import android.opengl.GLSurfaceView
+import com.odinaris.opengldemo.R
 import com.odinaris.opengldemo.bean.vec2
 import com.odinaris.opengldemo.bean.vec3
 import com.odinaris.opengldemo.bean.vec4
@@ -35,7 +36,7 @@ class PathRender(private var context: Context) : GLSurfaceView.Renderer {
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         GLES30.glClearColor(0.0f, 0.0f, 0.0f, 1.0f)
-        mProgram = createProgram(context, "path_vert.glsl", "path_frag.glsl")
+        mProgram = createProgram(context, R.raw.path_vert, R.raw.path_frag)
         GLES30.glEnable(GLES30.GL_BLEND)
         GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA, GLES30.GL_ONE_MINUS_SRC_ALPHA)
 
