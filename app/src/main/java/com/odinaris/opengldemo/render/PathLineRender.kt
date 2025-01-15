@@ -25,7 +25,7 @@ class PathLineRender(private var context: Context) : GLSurfaceView.Renderer {
     private val mPointVector: ArrayList<vec4> = ArrayList()
     private lateinit var mCurPoint: vec2
     private lateinit var mPrePoint: vec2
-    private var mProgram: Int = -1;
+    private var mProgram: Int = -1
     private var mWidth: Int = -1
     private var mHeight: Int = -1
     private var mVAO = 0
@@ -35,11 +35,8 @@ class PathLineRender(private var context: Context) : GLSurfaceView.Renderer {
 
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
-        GLES30.glClearColor(1.0f, 1.0f, 1.0f, 1.0f)
+        GLES30.glClearColor(0.0f, 0.0f, 0.0f, 0.0f)
         mProgram = createProgram(context, R.raw.path_line_vert, R.raw.path_line_frag)
-//        GLES30.glEnable(GLES30.GL_BLEND)
-//        GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA, GLES30.GL_ONE_MINUS_SRC_ALPHA)
-////        GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA, GLES30.GL_ZERO)
 
         GLES30.glGenBuffers(2, mVboIds, 0);
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, mVboIds[0]);
@@ -81,15 +78,10 @@ class PathLineRender(private var context: Context) : GLSurfaceView.Renderer {
     }
 
     override fun onDrawFrame(gl: GL10?) {
-        GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT)
-//
-//        GLES30.glEnable(GLES30.GL_DEPTH_TEST)
-//        GLES30.glDepthFunc(GLES30.GL_LESS)
-//
-//        GLES30.glEnable(GLES30.GL_BLEND)
-//        GLES30.glBlendFunc(GLES30.GL_ZERO, GLES30.GL_ONE)
-//        GLES30.glBlendEquation(GLES30.GL_FUNC_ADD)
-
+        GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT or GLES30.GL_DEPTH_BUFFER_BIT)
+        GLES30.glEnable(GLES30.GL_DEPTH_TEST)
+        GLES30.glEnable(GLES30.GL_BLEND)
+        GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA, GLES30.GL_ONE_MINUS_SRC_ALPHA)
 
         if (mPointVector.size < 1) return
         GLES30.glUseProgram(mProgram)

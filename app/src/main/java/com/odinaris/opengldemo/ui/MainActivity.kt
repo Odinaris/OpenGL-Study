@@ -10,8 +10,8 @@ import com.odinaris.opengldemo.databinding.ActivityMainBinding
 class MainActivity : FragmentActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private val mTitles = arrayOf("点绘制路径", "线绘制路径")
-    private val mFragments = arrayOf(PathDotFragment(), PathLineFragment())
+    private val mTitles = arrayOf("点绘制路径", "线绘制路径", "模板测试")
+    private val mFragments = arrayOf(PathDotFragment(), PathLineFragment(), StencilTestFragment())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,6 +22,7 @@ class MainActivity : FragmentActivity() {
             tab.text = mTitles[position]
         }.attach()
         binding.viewPager.isUserInputEnabled = false
+        binding.tabLayout.selectTab(binding.tabLayout.getTabAt(mTitles.size - 2))
     }
 
     inner class MyFragmentPagerAdapter : FragmentStateAdapter(this) {

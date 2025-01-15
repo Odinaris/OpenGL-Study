@@ -1,6 +1,7 @@
 package com.odinaris.opengldemo.widget
 
 import android.content.Context
+import android.graphics.PixelFormat
 import android.opengl.GLSurfaceView
 import android.util.AttributeSet
 import android.view.MotionEvent
@@ -14,6 +15,8 @@ class PathLineGLView : GLSurfaceView {
         setEGLContextClientVersion(3)
         mRenderer = PathLineRender(context)
         setEGLConfigChooser(8, 8, 8, 8, 16, 8)
+        holder.setFormat(PixelFormat.TRANSLUCENT)
+        setZOrderOnTop(true)
         setRenderer(mRenderer)
         renderMode = RENDERMODE_WHEN_DIRTY
     }
