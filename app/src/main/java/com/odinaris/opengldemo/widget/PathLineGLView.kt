@@ -4,15 +4,15 @@ import android.content.Context
 import android.opengl.GLSurfaceView
 import android.util.AttributeSet
 import android.view.MotionEvent
-import com.odinaris.opengldemo.render.PathRender
+import com.odinaris.opengldemo.render.PathLineRender
 
-class MyGLSurfaceView : GLSurfaceView {
+class PathLineGLView : GLSurfaceView {
 
-    private var mRenderer: PathRender
+    private var mRenderer: PathLineRender
 
     constructor(context: Context) : super(context) {
         setEGLContextClientVersion(3)
-        mRenderer = PathRender(context)
+        mRenderer = PathLineRender(context)
         setEGLConfigChooser(8, 8, 8, 8, 16, 8)
         setRenderer(mRenderer)
         renderMode = RENDERMODE_WHEN_DIRTY

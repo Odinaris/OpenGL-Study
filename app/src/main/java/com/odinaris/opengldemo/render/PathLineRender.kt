@@ -19,7 +19,7 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 
 
-class PathRender(private var context: Context) : GLSurfaceView.Renderer {
+class PathLineRender(private var context: Context) : GLSurfaceView.Renderer {
 
     private var mReset = true
     private val mPointVector: ArrayList<vec4> = ArrayList()
@@ -35,10 +35,11 @@ class PathRender(private var context: Context) : GLSurfaceView.Renderer {
 
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
-        GLES30.glClearColor(0.0f, 0.0f, 0.0f, 1.0f)
-        mProgram = createProgram(context, R.raw.path_vert, R.raw.path_frag)
-        GLES30.glEnable(GLES30.GL_BLEND)
-        GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA, GLES30.GL_ONE_MINUS_SRC_ALPHA)
+        GLES30.glClearColor(1.0f, 1.0f, 1.0f, 1.0f)
+        mProgram = createProgram(context, R.raw.path_line_vert, R.raw.path_line_frag)
+//        GLES30.glEnable(GLES30.GL_BLEND)
+//        GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA, GLES30.GL_ONE_MINUS_SRC_ALPHA)
+////        GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA, GLES30.GL_ZERO)
 
         GLES30.glGenBuffers(2, mVboIds, 0);
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, mVboIds[0]);
@@ -81,6 +82,15 @@ class PathRender(private var context: Context) : GLSurfaceView.Renderer {
 
     override fun onDrawFrame(gl: GL10?) {
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT)
+//
+//        GLES30.glEnable(GLES30.GL_DEPTH_TEST)
+//        GLES30.glDepthFunc(GLES30.GL_LESS)
+//
+//        GLES30.glEnable(GLES30.GL_BLEND)
+//        GLES30.glBlendFunc(GLES30.GL_ZERO, GLES30.GL_ONE)
+//        GLES30.glBlendEquation(GLES30.GL_FUNC_ADD)
+
+
         if (mPointVector.size < 1) return
         GLES30.glUseProgram(mProgram)
 
@@ -304,7 +314,7 @@ class PathRender(private var context: Context) : GLSurfaceView.Renderer {
     companion object {
         private val TAG = "PathRender"
         private val TRIANGLE_NUM = 43
-        private val EFFECT_RADIUS = 0.015f
+        private val EFFECT_RADIUS = 0.035f
     }
 
 }
