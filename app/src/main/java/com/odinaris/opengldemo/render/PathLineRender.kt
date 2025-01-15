@@ -32,24 +32,26 @@ class PathLineRender(private var context: Context) : GLSurfaceView.Renderer {
     private val mVboIds = IntArray(2)
     private val mVertexCoords = Array(TRIANGLE_NUM * 3) { vec3(0f, 0f, 0f) }
     private val mTexCoords = Array(TRIANGLE_NUM * 3) { vec2(0f, 0f) }
+    private var mTimeHandle = 0
+    private var mTime = 0f
 
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         GLES30.glClearColor(0.0f, 0.0f, 0.0f, 0.0f)
         mProgram = createProgram(context, R.raw.path_line_vert, R.raw.path_line_frag)
 
-        GLES30.glGenBuffers(2, mVboIds, 0);
-        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, mVboIds[0]);
+        GLES30.glGenBuffers(2, mVboIds, 0)
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, mVboIds[0])
         GLES30.glBufferData(
             GLES30.GL_ARRAY_BUFFER, mVertexCoords.size * 3 * 4,
             getVec3Buffer(mVertexCoords), GLES30.GL_DYNAMIC_DRAW
-        );
+        )
 
-        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, mVboIds[1]);
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, mVboIds[1])
         GLES30.glBufferData(
             GLES30.GL_ARRAY_BUFFER, mTexCoords.size * 2 * 4,
             getVec2Buffer(mTexCoords), GLES30.GL_DYNAMIC_DRAW
-        );
+        )
 
         // Initialize VAO and VBO
         val vaoIds = IntArray(1)
@@ -69,12 +71,14 @@ class PathLineRender(private var context: Context) : GLSurfaceView.Renderer {
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, GLES30.GL_NONE)
 
         GLES30.glBindVertexArray(0)
+
+        mTimeHandle = GLES30.glGetUniformLocation(mProgram, "uTime")
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
         mWidth = width
         mHeight = height
-        GLES30.glViewport(0, 0, mWidth, mHeight);
+        GLES30.glViewport(0, 0, mWidth, mHeight)
     }
 
     override fun onDrawFrame(gl: GL10?) {
@@ -107,6 +111,9 @@ class PathLineRender(private var context: Context) : GLSurfaceView.Renderer {
                 mTexCoords.size * 2 * 4,
                 getVec2Buffer(mTexCoords)
             )
+
+            mTime = 0.005f * i
+            GLES30.glUniform1f(mTimeHandle, mTime)
             GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, TRIANGLE_NUM * 3)
         }
 
@@ -116,16 +123,16 @@ class PathLineRender(private var context: Context) : GLSurfaceView.Renderer {
         // 半径
         val r = EFFECT_RADIUS * mWidth
         val imgSize = vec2(mWidth.toFloat(), mHeight.toFloat())
-        var p0 = pre * imgSize
-        var p1 = cur * imgSize
-        var v0: vec2
-        var v1: vec2
-        var v2: vec2
-        var v3: vec2
-        var x0 = p0.x
-        var y0 = p0.y
-        var x1 = p1.x
-        var y1 = p1.y
+        val p0 = pre * imgSize
+        val p1 = cur * imgSize
+        val v0: vec2
+        val v1: vec2
+        val v2: vec2
+        val v3: vec2
+        val x0 = p0.x
+        val y0 = p0.y
+        val x1 = p1.x
+        val y1 = p1.y
         if (y0 == y1)  // 1. 两点在同一水平线上
         {
             v0 = vec2(x0, y0 - r) / imgSize
@@ -169,15 +176,15 @@ class PathLineRender(private var context: Context) : GLSurfaceView.Renderer {
             v3 = vec2(v2_v3.z, v2_v3.w) / imgSize
         }
 
-        mTexCoords[0] = v0;
-        mTexCoords[1] = v1;
-        mTexCoords[2] = v2;
-        mTexCoords[3] = v0;
-        mTexCoords[4] = v2;
-        mTexCoords[5] = v3;
-        mTexCoords[6] = v1;
-        mTexCoords[7] = v2;
-        mTexCoords[8] = v3;
+        mTexCoords[0] = v0
+        mTexCoords[1] = v1
+        mTexCoords[2] = v2
+        mTexCoords[3] = v0
+        mTexCoords[4] = v2
+        mTexCoords[5] = v3
+        mTexCoords[6] = v1
+        mTexCoords[7] = v2
+        mTexCoords[8] = v3
 
         val index = 9
         val step: Float = (Math.PI / 10).toFloat()
