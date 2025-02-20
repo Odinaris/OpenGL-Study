@@ -1,0 +1,14 @@
+plugins {
+    id 'java-library'
+}
+
+dependencies {
+    implementation project(':lib_annotation')
+    implementation libs.auto.service
+    annotationProcessor libs.auto.service
+    implementation libs.javapoet
+}
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}

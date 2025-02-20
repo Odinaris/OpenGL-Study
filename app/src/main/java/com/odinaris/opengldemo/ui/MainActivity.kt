@@ -6,8 +6,13 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import com.odinaris.opengldemo.databinding.ActivityMainBinding
+import com.odinaris.opengldemo.presenter.MainCategoryPresenter
 
 class MainActivity : FragmentActivity() {
+
+    companion object {
+        const val TAG = "MainActivity"
+    }
 
     private lateinit var binding: ActivityMainBinding
     private val mTitles = arrayOf("点绘制路径", "线绘制路径", "模板测试")
@@ -23,6 +28,7 @@ class MainActivity : FragmentActivity() {
         }.attach()
         binding.viewPager.isUserInputEnabled = false
         binding.tabLayout.selectTab(binding.tabLayout.getTabAt(mTitles.size - 2))
+        val mainCategoryPresenter = MainCategoryPresenter()
     }
 
     inner class MyFragmentPagerAdapter : FragmentStateAdapter(this) {

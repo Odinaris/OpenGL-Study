@@ -26,3 +26,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "OpenGLDemo"
 include ':app'
+include ':lib_annotation_processor'
+include ':lib_annotation'

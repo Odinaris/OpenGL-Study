@@ -38,10 +38,19 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
     }
+
+    android {
+        sourceSets {
+            main {
+                java.srcDirs += 'build/generated/source/ap_generated/'
+            }
+        }
+    }
 }
 
 dependencies {
-
+    implementation(project(":lib_annotation"))
+    annotationProcessor(project(":lib_annotation_processor"))
     implementation libs.appcompat
     implementation libs.material
     implementation libs.activity
